@@ -2,7 +2,7 @@
 
 namespace ComexApi.Models;
 
-public class ManifestoEscala
+public class VinculoManifestoEscala
 {
     public int ManifestoId { get; set; }
     [ForeignKey("ManifestoId")]

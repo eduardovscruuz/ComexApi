@@ -1,6 +1,6 @@
 ﻿namespace ComexApi.Models;
 
-public enum TipoManifesto
+public enum TiposManifesto
 {
     IMPORTACAO,
     EXPORTACAO
@@ -12,7 +12,7 @@ public class Manifesto
 
     public required string Numero { get; set; }
 
-    public TipoManifesto Tipo { get; set; }
+    public TiposManifesto Tipo { get; set; }
 
     public required string Navio { get; set; }
 
@@ -20,5 +20,5 @@ public class Manifesto
 
     public required string PortoDestino { get; set; }
 
-    public ICollection<ManifestoEscala> VinculosManifestoEscalas { get; set; } = new List<ManifestoEscala>();
+    public ICollection<ManifestoEscala> TabelaDeVinculosManEsc { get; set; } = new List<ManifestoEscala>();
 }

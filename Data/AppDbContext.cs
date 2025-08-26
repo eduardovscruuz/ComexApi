@@ -7,9 +7,9 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<Escala> Escalas { get; set; }
-    public DbSet<Manifesto> Manifestos { get; set; }
-    public DbSet<ManifestoEscala> ManifestosEscalas { get; set; }
+    public DbSet<Escala> TabelaDeEscalas { get; set; }
+    public DbSet<Manifesto> TabelaDeManifestos { get; set; }
+    public DbSet<VinculoManifestoEscala> TabelaDeVinculos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
