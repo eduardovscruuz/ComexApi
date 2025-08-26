@@ -6,8 +6,10 @@ namespace ComexApi.Services;
 
 public interface IEscalaService
 {
-    Task<List<Escala>> GetAllEscalas();
-    Task<Escala> GetEscalaById(int id);
+    Task<List<Escala>> ListarEscalas();
+    Task<Escala?> BuscarEscalaPorId(int id);
+    Task<Escala> CriarEscala(Escala escala);
+    Task<bool> DeletarEscala(int id);
 }
 
 public class EscalaService : IEscalaService
@@ -19,14 +21,31 @@ public class EscalaService : IEscalaService
         _context = context;
     }
 
-    public async Task<List<Escala>> GetAllEscalas()
+    public async Task<Escala> CriarEscala(Escala escala)
     {
-        return await _context.Escalas.ToListAsync();
+        _context.TabelaDeEscalas.Add(escala);
+        await _context.SaveChangesAsync();
+        return escala;
+    }
+    public async Task<List<Escala>> ListarEscalas()
+    {
+        return await _context.TabelaDeEscalas.ToListAsync();
     }
 
-
-    public async Task<Escala> GetEscalaById(int id)
+    public async Task<Escala?> BuscarEscalaPorId(int id)
     {
-        return await _context.Escalas.FirstAsync(e => e.Id == id);
+        return await _context.TabelaDeEscalas.FindAsync(id);
     }
+
+    public async Task<bool> DeletarEscala(int id)
+    {
+        var escalaExiste = await _context.TabelaDeEscalas.FindAsync(id);
+        if (escalaExiste == null) return false;
+
+        _context.TabelaDeEscalas.Remove(escalaExiste);
+        await _context.SaveChangesAsync();
+        return true;
+
+    }
+
 }

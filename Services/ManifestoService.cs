@@ -1,8 +1,13 @@
 ﻿using ComexApi.Data;
 using ComexApi.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace ComexApi.Services;
+
+public interface IManifestoService
+{
+    Task<List<Manifesto>> GetAllManifestos();
+    Task<Manifesto> GetManifestoById(int id);
+}
 
 public class ManifestoService : IManifestoService
 {
@@ -13,15 +18,13 @@ public class ManifestoService : IManifestoService
         _context = context;
     }
 
-    public async Task<List<Manifesto>> GetAllManifestos()
+    public Task<List<Manifesto>> GetAllManifestos()
     {
-        return await _context.Manifestos.ToListAsync();
+        throw new NotImplementedException();
     }
 
-    public async Task<Manifesto> GetManifestoById(int id)
+    public Task<Manifesto> GetManifestoById(int id)
     {
-        return await _context.Manifestos.FirstAsync(m => m.Id == id);
+        throw new NotImplementedException();
     }
-
-
 }

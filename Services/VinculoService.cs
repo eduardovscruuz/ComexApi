@@ -1,5 +1,4 @@
 ﻿using ComexApi.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace ComexApi.Services;
 
@@ -18,17 +17,14 @@ public class VinculoService : IVinculoService
     {
         _context = context;
     }
-    public async Task<bool> VincularManifestosEscalas(int escalaId, int manifestoId)
+
+    public Task<bool> DesvincularManifestosEscalas(int escalaId, int manifestoId)
     {
-
-        return await _context.ManifestosEscalas.Include(e => e.EscalaId).Include(m => m.ManifestoId).ToListAsync();
-
-
+        throw new NotImplementedException();
     }
 
-    public async Task<bool> DesvincularManifestosEscalas(int escalaId, int manifestoId)
+    public Task<bool> VincularManifestosEscalas(int escalaId, int manifestoId)
     {
-        return await;
+        throw new NotImplementedException();
     }
-
 }
