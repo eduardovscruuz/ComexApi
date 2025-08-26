@@ -1,4 +1,5 @@
 ﻿using ComexApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace ComexApi.Data;
@@ -7,30 +8,57 @@ public static class DbSeeder
 {
     public static async Task SeedAsync(AppDbContext context)
     {
-        // Manifestos
-        if (!context.TabelaDeManifestos.Any())
-        {
-            var manifestosJson = File.ReadAllText("Data/Seed/manifestos.json");
-            var manifestos = JsonConvert.DeserializeObject<List<Manifesto>>(manifestosJson);
-            context.TabelaDeManifestos.AddRange(manifestos!);
-        }
+        // Abre conexão e cria transação
+        await context.Database.OpenConnectionAsync();
+        using var transaction = await context.Database.BeginTransactionAsync();
 
-        // Escalas
-        if (!context.TabelaDeEscalas.Any())
+        try
         {
-            var escalasJson = File.ReadAllText("Data/Seed/escalas.json");
-            var escalas = JsonConvert.DeserializeObject<List<Escala>>(escalasJson);
-            context.TabelaDeEscalas.AddRange(escalas!);
-        }
+            // 1️⃣ Escalas
+            if (!context.TabelaDeEscalas.Any())
+            {
+                var escalasJson = File.ReadAllText("Data/Seed/escalas.json");
+                var escalas = JsonConvert.DeserializeObject<List<Escala>>(escalasJson)!;
 
-        // Vínculos (opcional)
-        if (!context.TabelaDeVinculos.Any() && File.Exists("Data/Seed/manifestos_escalas.json"))
+                await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT TabelaDeEscalas ON");
+                context.TabelaDeEscalas.AddRange(escalas);
+                await context.SaveChangesAsync();
+                await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT TabelaDeEscalas OFF");
+            }
+
+            // 2️⃣ Manifestos
+            if (!context.TabelaDeManifestos.Any())
+            {
+                var manifestosJson = File.ReadAllText("Data/Seed/manifestos.json");
+                var manifestos = JsonConvert.DeserializeObject<List<Manifesto>>(manifestosJson)!;
+
+                await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT TabelaDeManifestos ON");
+                context.TabelaDeManifestos.AddRange(manifestos);
+                await context.SaveChangesAsync();
+                await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT TabelaDeManifestos OFF");
+            }
+
+            // 3️⃣ Vínculos
+            if (!context.TabelaDeVinculos.Any() && File.Exists("Data/Seed/manifestos_escalas.json"))
+            {
+                var vinculosJson = File.ReadAllText("Data/Seed/manifestos_escalas.json");
+                var vinculos = JsonConvert.DeserializeObject<List<VinculoManifestoEscala>>(vinculosJson)!;
+
+                context.TabelaDeVinculos.AddRange(vinculos);
+                await context.SaveChangesAsync();
+            }
+
+            // Commit da transação
+            await transaction.CommitAsync();
+        }
+        catch
         {
-            var vinculosJson = File.ReadAllText("Data/Seed/manifestos_escalas.json");
-            var vinculos = JsonConvert.DeserializeObject<List<VinculoManifestoEscala>>(vinculosJson);
-            context.TabelaDeVinculos.AddRange(vinculos!);
+            await transaction.RollbackAsync();
+            throw;
         }
-
-        await context.SaveChangesAsync();
+        finally
+        {
+            await context.Database.CloseConnectionAsync();
+        }
     }
 }
