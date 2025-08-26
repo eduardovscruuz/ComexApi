@@ -18,6 +18,10 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Escala>().Property(e => e.Status).HasConversion<string>();
         modelBuilder.Entity<Manifesto>().Property(m => m.Tipo).HasConversion<string>();
 
+        modelBuilder.Entity<Manifesto>().HasIndex(m => m.Numero).IsUnique();
+
+        modelBuilder.Entity<VinculoManifestoEscala>().HasKey(v => new { v.ManifestoId, v.EscalaId });
+
 
     }
 }
