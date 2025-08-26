@@ -1,0 +1,54 @@
+[
+  {
+    "id": 201,
+    "navio": "MV Atlas",
+    "porto": "BRRGD - RIO GRANDE",
+    "status": "PREVISTA",
+    "eta": "2025-08-27T05:00:00-03:00"
+  },
+  {
+    "id": 202,
+    "navio": "MV Atlas",
+    "porto": "BRITJ - ITAJAI",
+    "status": "CANCELADA",
+    "eta": "2025-08-28T10:00:00-03:00"
+  },
+  {
+    "id": 203,
+    "navio": "MV Atlas",
+    "porto": "BRPNG - PARANAGUA",
+    "status": "PREVISTA",
+    "eta": "2025-08-29T21:00:00-03:00"
+  },
+  {
+    "id": 204,
+    "navio": "MV Atlas",
+    "porto": "BRSSZ - SANTOS",
+    "status": "PREVISTA",
+    "eta": "2025-08-31T08:00:00-03:00"
+  },
+  {
+    "id": 301,
+    "navio": "MV Poseidon",
+    "porto": "BRRGD - RIO GRANDE",
+    "status": "SAIU",
+    "eta": "2025-08-22T03:00:00-03:00",
+    "etb": "2025-08-22T06:00:00-03:00",
+    "etd": "2025-08-22T18:00:00-03:00"
+  },
+  {
+    "id": 302,
+    "navio": "MV Poseidon",
+    "porto": "BRITJ - ITAJAI",
+    "status": "ATRACADA",
+    "eta": "2025-08-24T06:00:00-03:00",
+    "etb": "2025-08-24T07:30:00-03:00"
+  },
+  {
+    "id": 303,
+    "navio": "MV Poseidon",
+    "porto": "BRSSZ - SANTOS",
+    "status": "PREVISTA",
+    "eta": "2025-08-26T09:00:00-03:00"
+  }
+]

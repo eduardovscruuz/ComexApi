@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ComexApi.Controllers;
 
 [ApiController]
-[Route("manifestos")]
+[Route("api/manifestos")]
 public class ManifestoController : ControllerBase
 {
     private readonly IManifestoService _service;

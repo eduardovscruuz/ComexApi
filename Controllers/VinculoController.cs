@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ComexApi.Controllers;
 
 [ApiController]
-[Route("vincular")]
+[Route("api/vincular")]
 public class VinculoController : ControllerBase
 {
     private readonly IVinculoService _service;

@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "numero": "IMP-2025-0001",
+    "tipo": "IMPORTACAO",
+    "navio": "MV Atlas",
+    "porto_origem": "CN SHANGHAI",
+    "porto_destino": "BR SANTOS"
+  },
+  {
+    "id": 2,
+    "numero": "EXP-2025-0042",
+    "tipo": "EXPORTACAO",
+    "navio": "MV Poseidon",
+    "porto_origem": "BR RIO GRANDE",
+    "porto_destino": "NL ROTTERDAM"
+  }
+]

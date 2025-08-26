@@ -1,8 +1,12 @@
 ﻿using ComexApi.Data;
+using ComexApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IEscalaService, EscalaService>();
+builder.Services.AddScoped<IManifestoService, ManifestoService>();
+builder.Services.AddScoped<IVinculoService, VinculoService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -26,6 +30,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/api", () => Results.Ok("API está rodando 🚀"));
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DbSeeder.SeedAsync(context);
+}
 
 app.Run();

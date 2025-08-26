@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ComexApi.Controllers;
 
 [ApiController]
-[Route("escalas")]
+[Route("api/escalas")]
 public class EscalaController : ControllerBase
 {
     private readonly IEscalaService _service;
