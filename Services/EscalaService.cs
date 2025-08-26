@@ -4,6 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ComexApi.Services;
 
+public interface IEscalaService
+{
+    Task<List<Escala>> GetAllEscalas();
+    Task<Escala> GetEscalaById(int id);
+}
+
 public class EscalaService : IEscalaService
 {
     private readonly AppDbContext _context;
