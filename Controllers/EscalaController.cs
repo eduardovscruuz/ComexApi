@@ -16,11 +16,7 @@ public class EscalaController : ControllerBase
     public async Task<IActionResult> Listar() => Ok(await _service.ListarEscalas());
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Buscar(int id)
-    {
-        var escala = await _service.BuscarEscalaPorId(id);
-        return Ok(escala);
-    }
+    public async Task<IActionResult> Buscar(int id) => Ok(await _service.BuscarEscalaPorId(id));
 
     [HttpPost]
     public async Task<IActionResult> Criar([FromBody] Escala escala)
