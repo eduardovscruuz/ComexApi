@@ -2,7 +2,6 @@
 using ComexApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ComexApi.Services;
 
 public interface IEscalaService
 {
@@ -15,11 +14,7 @@ public interface IEscalaService
 public class EscalaService : IEscalaService
 {
     private readonly AppDbContext _context;
-
-    public EscalaService(AppDbContext context)
-    {
-        _context = context;
-    }
+    public EscalaService(AppDbContext context) { _context = context; }
 
     public async Task<Escala> CriarEscala(Escala escala)
     {
@@ -27,9 +22,13 @@ public class EscalaService : IEscalaService
         await _context.SaveChangesAsync();
         return escala;
     }
+
     public async Task<List<Escala>> ListarEscalas()
     {
-        return await _context.TabelaDeEscalas.ToListAsync();
+        return await _context.TabelaDeEscalas
+                 .Include(e => e.ManifestosVinculados)
+                   .ThenInclude(v => v.Manifesto)
+                 .ToListAsync();
     }
 
     public async Task<Escala?> BuscarEscalaPorId(int id)
@@ -39,13 +38,15 @@ public class EscalaService : IEscalaService
 
     public async Task<bool> DeletarEscala(int id)
     {
-        var escalaExiste = await _context.TabelaDeEscalas.FindAsync(id);
-        if (escalaExiste == null) return false;
+        var escala = await _context.TabelaDeEscalas.FindAsync(id);
+        if (escala == null) return false;
 
-        _context.TabelaDeEscalas.Remove(escalaExiste);
+        // Deletar todos os vínculos dessa escala
+        var vinculos = _context.TabelaDeVinculos.Where(v => v.EscalaId == id);
+        _context.TabelaDeVinculos.RemoveRange(vinculos);
+
+        _context.TabelaDeEscalas.Remove(escala);
         await _context.SaveChangesAsync();
         return true;
-
     }
-
 }

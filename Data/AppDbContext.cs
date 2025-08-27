@@ -9,7 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Escala> TabelaDeEscalas { get; set; }
     public DbSet<Manifesto> TabelaDeManifestos { get; set; }
-    public DbSet<VinculoManifestoEscala> TabelaDeVinculos { get; set; }
+    public DbSet<Vinculo> TabelaDeVinculos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,7 +20,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Manifesto>().HasIndex(m => m.Numero).IsUnique();
 
-        modelBuilder.Entity<VinculoManifestoEscala>().HasKey(v => new { v.ManifestoId, v.EscalaId });
+        modelBuilder.Entity<Vinculo>().HasKey(v => new { v.ManifestoId, v.EscalaId });
 
 
     }

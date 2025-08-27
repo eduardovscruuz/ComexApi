@@ -92,7 +92,7 @@ namespace ComexApi.Migrations
                     b.ToTable("TabelaDeManifestos");
                 });
 
-            modelBuilder.Entity("ComexApi.Models.VinculoManifestoEscala", b =>
+            modelBuilder.Entity("ComexApi.Models.Vinculo", b =>
                 {
                     b.Property<int>("ManifestoId")
                         .HasColumnType("int");
@@ -110,16 +110,16 @@ namespace ComexApi.Migrations
                     b.ToTable("TabelaDeVinculos");
                 });
 
-            modelBuilder.Entity("ComexApi.Models.VinculoManifestoEscala", b =>
+            modelBuilder.Entity("ComexApi.Models.Vinculo", b =>
                 {
                     b.HasOne("ComexApi.Models.Escala", "Escala")
-                        .WithMany("TabelaDeVinculos")
+                        .WithMany("ManifestosVinculados")
                         .HasForeignKey("EscalaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ComexApi.Models.Manifesto", "Manifesto")
-                        .WithMany("TabelaDeVinculosManEsc")
+                        .WithMany("EscalasVinculadas")
                         .HasForeignKey("ManifestoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -131,12 +131,12 @@ namespace ComexApi.Migrations
 
             modelBuilder.Entity("ComexApi.Models.Escala", b =>
                 {
-                    b.Navigation("TabelaDeVinculos");
+                    b.Navigation("ManifestosVinculados");
                 });
 
             modelBuilder.Entity("ComexApi.Models.Manifesto", b =>
                 {
-                    b.Navigation("TabelaDeVinculosManEsc");
+                    b.Navigation("EscalasVinculadas");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,34 +1,45 @@
 ﻿using ComexApi.Models;
-using ComexApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComexApi.Controllers;
 
 [ApiController]
-[Route("api/escalas")]
-public class EscalaController : ControllerBase
+[Route("api/[controller]")]
+public class EscalasController : ControllerBase
 {
-    private readonly IEscalaService _service;
-    public EscalaController(IEscalaService service) => _service = service;
+    private readonly IEscalaService _escalaService;
 
+    public EscalasController(IEscalaService escalaService)
+    {
+        _escalaService = escalaService;
+    }
 
     [HttpGet]
-    public async Task<IActionResult> Listar() => Ok(await _service.ListarEscalas());
+    public async Task<ActionResult<List<Escala>>> Listar()
+    {
+        return Ok(await _escalaService.ListarEscalas());
+    }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Buscar(int id) => Ok(await _service.BuscarEscalaPorId(id));
+    public async Task<ActionResult<Escala>> BuscarPorId(int id)
+    {
+        var escala = await _escalaService.BuscarEscalaPorId(id);
+        if (escala == null) return NotFound();
+        return Ok(escala);
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Criar([FromBody] Escala escala)
+    public async Task<ActionResult<Escala>> Criar(Escala escala)
     {
-        var criada = await _service.CriarEscala(escala);
-        return CreatedAtAction(nameof(Buscar), new { id = criada.Id }, criada);
+        var criada = await _escalaService.CriarEscala(escala);
+        return CreatedAtAction(nameof(BuscarPorId), new { id = criada.Id }, criada);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Deletar(int id)
+    public async Task<ActionResult> Deletar(int id)
     {
-        if (!await _service.DeletarEscala(id)) return NotFound();
+        var deletou = await _escalaService.DeletarEscala(id);
+        if (!deletou) return NotFound();
         return NoContent();
     }
 }

@@ -1,34 +1,45 @@
 ﻿using ComexApi.Models;
-using ComexApi.Services;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace ComexApi.Controllers;
 
 [ApiController]
-[Route("api/manifestos")]
-public class ManifestoController : ControllerBase
+[Route("api/[controller]")]
+public class ManifestosController : ControllerBase
 {
-    private readonly IManifestoService _service;
-    public ManifestoController(IManifestoService service) => _service = service;
+    private readonly IManifestoService _manifestoService;
+
+    public ManifestosController(IManifestoService manifestoService)
+    {
+        _manifestoService = manifestoService;
+    }
 
     [HttpGet]
-    public async Task<IActionResult> Listar() => Ok(await _service.ListarManifestos());
+    public async Task<ActionResult<List<Manifesto>>> Listar()
+    {
+        return Ok(await _manifestoService.ListarManifestos());
+    }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Buscar(int id) => Ok(await _service.BuscarManifestoPorId(id));
+    public async Task<ActionResult<Manifesto>> BuscarPorId(int id)
+    {
+        var manifesto = await _manifestoService.BuscarManifestoPorId(id);
+        if (manifesto == null) return NotFound();
+        return Ok(manifesto);
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Criar([FromBody] Manifesto manifesto)
+    public async Task<ActionResult<Manifesto>> Criar(Manifesto manifesto)
     {
-        var criada = await _service.CriarManifesto(manifesto);
-        return CreatedAtAction(nameof(Buscar), new { id = criada.Id }, criada);
+        var criado = await _manifestoService.CriarManifesto(manifesto);
+        return CreatedAtAction(nameof(BuscarPorId), new { id = criado.Id }, criado);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Deletar(int id)
+    public async Task<ActionResult> Deletar(int id)
     {
-        if (!await _service.DeletarManifesto(id)) return NotFound();
+        var deletou = await _manifestoService.DeletarManifesto(id);
+        if (!deletou) return NotFound();
         return NoContent();
     }
 }

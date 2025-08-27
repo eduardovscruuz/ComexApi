@@ -17,6 +17,5 @@ public class Escala
     public DateTime? ETA { get; set; } // Data Estimada de CHEGADA
     public DateTime? ETB { get; set; } // Data Estimada de ATRACAÇÃO
     public DateTime? ETD { get; set; } // Data Estimada de SAÍDA
-
-    public ICollection<VinculoManifestoEscala> TabelaDeVinculos { get; set; } = new List<VinculoManifestoEscala>();
+    public ICollection<Vinculo>? ManifestosVinculados { get; set; }
 }

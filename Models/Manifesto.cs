@@ -20,5 +20,5 @@ public class Manifesto
 
     public required string PortoDestino { get; set; }
 
-    public ICollection<VinculoManifestoEscala> TabelaDeVinculosManEsc { get; set; } = new List<VinculoManifestoEscala>();
+    public ICollection<Vinculo>? EscalasVinculadas { get; set; }
 }
