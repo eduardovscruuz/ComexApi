@@ -18,7 +18,7 @@ public class VinculosController : ControllerBase
     public async Task<ActionResult> ListarTodos()
     {
         // Retorna todos os vínculos
-        var vinculos = await _vinculoService.ListarManifestosDeEscala(0); // Pode ajustar para um método que liste tudo
+        var vinculos = await _vinculoService.ListarTodos(); // Pode ajustar para um método que liste tudo
         return Ok(vinculos);
     }
 

@@ -33,7 +33,10 @@ public class EscalaService : IEscalaService
 
     public async Task<Escala?> BuscarEscalaPorId(int id)
     {
-        return await _context.TabelaDeEscalas.FindAsync(id);
+        return await _context.TabelaDeEscalas
+            .Include(e => e.ManifestosVinculados)
+                .ThenInclude(v => v.Manifesto)
+            .FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public async Task<bool> DeletarEscala(int id)
