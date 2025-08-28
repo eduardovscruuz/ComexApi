@@ -1,103 +1,105 @@
-﻿# ComexApi
+﻿# 🚢 Comex API
 
-Este projeto é uma API desenvolvida em **.NET 8** para gerenciar **Manifestos** e **Escalas**, incluindo o relacionamento entre eles.
-
-## 🚀 Tecnologias Utilizadas
-
-- .NET 8 (Web API)
-- Entity Framework Core
-- SQL Server (ou outro banco configurado)
-- Newtonsoft.Json (para desserialização de seeders)
+API desenvolvida em **.NET 8** para gerenciamento de **Escalas**, **Manifestos** e seus **Vínculos**.  
+Permite cadastrar, listar e excluir escalas e manifestos, além de criar vínculos entre eles.
 
 ---
 
-## 📂 Estrutura do Projeto
-
-```
-ComexApi/
-│-- Controllers/        # Controllers da API
-│-- Data/               # Contexto do banco + Seeders
-│-- Models/             # Modelos de dados (Manifesto, Escala, Vínculo)
-│-- Migrations/         # Histórico das migrations
-│-- Program.cs          # Configuração da aplicação
-```
+## 📌 Tecnologias utilizadas
+- [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
+- [SQL Server](https://www.microsoft.com/sql-server)
+- [Swagger / Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 
 ---
 
-## ⚙️ Configuração do Projeto
+## ⚙️ Estrutura do Projeto
+- **Program.cs** → Configuração da aplicação, injeção de dependências, CORS e Swagger.  
+- **Data/AppDbContext.cs** → Contexto do banco de dados e configuração do EF Core.  
+- **Models** → Entidades (`Escala`, `Manifesto`, `Vinculo`) e enums (`StatusEscala`, `TiposManifesto`).  
+- **Services** → Lógica de negócio e regras de manipulação do banco.  
+- **Controllers** → Endpoints da API (Escalas, Manifestos e Vinculos).
 
-### 1. Clonar o repositório
+---
+
+## 🚀 Como rodar o projeto
+
+### 1️⃣ Clonar o repositório
 ```bash
-git clone https://github.com/seu-usuario/ComexApi.git
-cd ComexApi
+git clone https://github.com/seu-repo/comex-api.git
+cd comex-api
 ```
 
-### 2. Criar a base de dados via Migration
-```bash
-dotnet ef database update
-```
-
-### 3. Popular o banco de dados (Seeder)
-Os arquivos JSON com dados mockados estão em `Data/Seed/`.
-
-O seeding roda automaticamente no **startup da aplicação** (em `Program.cs`):
-```csharp
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DbSeeder.SeedAsync(dbContext);
+### 2️⃣ Configurar o banco de dados
+No arquivo `appsettings.json`, configure a connection string:
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=ComexDB;Trusted_Connection=True;TrustServerCertificate=True;"
 }
 ```
 
-Ou seja, na primeira execução da API (`dotnet run`), o banco será populado.
+### 3️⃣ Criar o banco e aplicar migrations
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
 
----
-
-## ▶️ Executar a Aplicação
-
+### 4️⃣ Rodar a API
 ```bash
 dotnet run
 ```
 
-A API ficará disponível em:
+Por padrão, a API sobe em:
+- **HTTP:** `http://localhost:5252`
+- **HTTPS:** `https://localhost:7002`
+
+Swagger disponível em:
 ```
-https://localhost:7002 (HTTPS)
-http://localhost:5252 (HTTP)
+http://localhost:5252/swagger
 ```
 
 ---
 
-## 📌 Endpoints (Exemplos)
+## 📚 Endpoints principais
 
-### Manifestos
-- `GET /api/manifestos` → Lista todos os manifestos
-- `GET /api/manifestos/{id}` → Detalhes de um manifesto
-- `POST /api/manifestos` → Cria um manifesto
+### 🔹 Escalas (`/api/escalas`)
+- `GET /api/escalas` → Lista todas as escalas  
+- `GET /api/escalas/{id}` → Busca uma escala por ID  
+- `POST /api/escalas` → Cria uma nova escala  
+- `DELETE /api/escalas/{id}` → Remove uma escala  
 
-### Escalas
-- `GET /api/escalas` → Lista todas as escalas
-- `GET /api/escalas/{id}` → Detalhes de uma escala
-- `POST /api/escalas` → Cria uma escala
+### 🔹 Manifestos (`/api/manifestos`)
+- `GET /api/manifestos` → Lista todos os manifestos  
+- `GET /api/manifestos/{id}` → Busca um manifesto por ID  
+- `POST /api/manifestos` → Cria um novo manifesto  
+- `DELETE /api/manifestos/{id}` → Remove um manifesto  
 
-### Vínculos (Manifesto ↔ Escala)
-- `POST /api/vinculos` → Vincula um manifesto a uma escala
-- `GET /api/vinculos` → Lista vínculos existentes
-
----
-
-## 🛠️ Observações
-
-- Os arquivos **JSON em `Data/Seed/` não devem ser excluídos**, pois servem como fonte de dados mockados para testes.  
-- Caso queira limpar e recriar o banco, basta rodar:
-  ```bash
-  dotnet ef database drop -f
-  dotnet ef database update
-  dotnet run
-  ```
-  Assim o **Seeder** será executado novamente.
+### 🔹 Vínculos (`/api/vinculos`)
+- `GET /api/vinculos` → Lista todos os vínculos  
+- `GET /api/vinculos/manifesto/{manifestoId}` → Lista escalas de um manifesto  
+- `GET /api/vinculos/escala/{escalaId}` → Lista manifestos de uma escala  
+- `POST /api/vinculos/{manifestoId}/{escalaId}` → Cria vínculo entre manifesto e escala  
+- `DELETE /api/vinculos/{manifestoId}/{escalaId}` → Remove vínculo  
 
 ---
 
-## 📜 Licença
+## 🛠️ Regras de Negócio
+- Um **manifesto** só pode ser vinculado a uma **escala** se:
+  - O **navio** for o mesmo.
+  - A escala **não estiver cancelada**.
+  - Não existir vínculo duplicado.
+- Ao excluir um **manifesto** ou uma **escala**, todos os vínculos relacionados são removidos.
 
-Projeto desenvolvido para fins de **teste técnico**.
+---
+
+## 🧑‍💻 Contribuição
+1. Fork o projeto  
+2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)  
+3. Commit suas alterações (`git commit -m 'Adiciona nova funcionalidade'`)  
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)  
+5. Abra um Pull Request 🚀  
+
+---
+
+## 📄 Licença
+Este projeto está sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.

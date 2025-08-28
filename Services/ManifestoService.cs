@@ -32,8 +32,12 @@ public class ManifestoService : IManifestoService
 
     public async Task<Manifesto?> BuscarManifestoPorId(int id)
     {
-        return await _context.TabelaDeManifestos.FindAsync(id);
+        return await _context.TabelaDeManifestos
+            .Include(m => m.EscalasVinculadas)
+                .ThenInclude(v => v.Escala)
+            .FirstOrDefaultAsync(m => m.Id == id);
     }
+
 
     public async Task<bool> DeletarManifesto(int id)
     {

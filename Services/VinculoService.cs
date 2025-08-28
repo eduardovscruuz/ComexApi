@@ -29,6 +29,8 @@ public class VinculoService : IVinculoService
     {
         return await _context.TabelaDeVinculos
             .Where(v => v.ManifestoId == manifestoId)
+            .Include(v => v.Escala)
+                .ThenInclude(e => e.ManifestosVinculados) // carrega os vínculos da escala
             .Select(v => v.Escala)
             .ToListAsync();
     }
@@ -37,6 +39,8 @@ public class VinculoService : IVinculoService
     {
         return await _context.TabelaDeVinculos
             .Where(v => v.EscalaId == escalaId)
+            .Include(v => v.Manifesto)
+                .ThenInclude(m => m.EscalasVinculadas) // carrega os vínculos do manifesto
             .Select(v => v.Manifesto)
             .ToListAsync();
     }
